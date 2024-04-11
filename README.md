@@ -1,45 +1,42 @@
 # howlongtobeat_py_api
-REST Python Flask API using howlongtobeatpy library plus aditional scraping 
+REST Python Flask API using howlongtobeatpy library and additional scraping. 
 
-## Instalation/Use
-requires python 3.X and Flask (_pip install flask_). In the directory just run "app.py" (_python app.py_)
+## Installation and Usage
+Requires Python 3.X, Flask (_pip install flask_), howlongtobeatpy (_pip install howlongtobeatpy_), and BeautifulSoup (_pip install beautifulsoup4_).  
 
-Api Routes
-```
-/search                    =>     Default Search (first page games on HLTB)
-/search/"GAME_NAME"        =>     Results for search term
-/game_info/"HLTB_GAME_ID"  =>     Spacific game full info
+Run "app.py" (_python app.py_) in the same directory.
+
+API Routes
 
 ```
+/front-page                =>     The list of games that appear on the HowLongToBeat home page.
+/find-game/"GAME_NAME"     =>     Results for search term.
+/game_info/"HLTB_GAME_ID"  =>     Specific information for a game based on the ID from HowLongToBeat.
 
-### Original source by ScrappyCoco
-### howlongtobeatpy
-https://pypi.org/project/howlongtobeatpy/
-
-https://github.com/ScrappyCocco/HowLongToBeat-PythonAPI
-
-
-It uses the game_id (https://howlongtobeat.com/game.php?id=XXXX) to extract aditional information that howlongtobeatpy dont provide.
-
-## The aditional info
 ```
--Game Description
 
--Developer
+## Additional info
+The game ID (https://howlongtobeat.com/game.php?id=XXXX) is used to extract additional information that howlongtobeatpy doesn't provide.
 
--Genres
-
--Platforms
-
--Publisher
-
--Game Rating (acording to HowLongToBeat users)
-
--Release dates
-
--and Last update in the site
 ```
-## Example '/game_info/6064'
+- Game description
+
+- Developer
+
+- List of genres
+
+- Platforms
+
+- Publisher
+
+- Game rating (according to HowLongToBeat users)
+
+- Full release dates
+
+- Last updated on the site
+```
+
+## Example API response '/game_info/6064'
 ```json
 {
     "description": "Minecraft is a game about placing blocks to buil anything you can imagine. At night monsters come out, make sure to build a shelter before that happens.",
@@ -95,3 +92,10 @@ It uses the game_id (https://howlongtobeat.com/game.php?id=XXXX) to extract adit
 }
 ```
 
+## Credit
+### howlongtobeatpy
+
+Original source by ScrappyCoco  
+Python package: https://pypi.org/project/howlongtobeatpy/
+
+Repo: https://github.com/ScrappyCocco/HowLongToBeat-PythonAPI
