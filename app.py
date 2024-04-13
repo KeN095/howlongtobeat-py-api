@@ -47,7 +47,7 @@ def front_page():
     return response
 
 @app.route("/find-game/<game_name>")
-def find_by_name(game_name):
+def find_game(game_name):
 
     response = {
         "HLTB" : []
