@@ -8,7 +8,7 @@ app = Flask(__name__)
 def hello_world():
     return '''<p>How Long To Beat - API (beta - by JohnnyBannanis)</p>
         <p>/front-page                =>       Default Search (first page of games on HLTB)</p>
-        <p>/search/"GAME_NAME"        =>       Results for search term</p>
+        <p>/find-game/"GAME_NAME"     =>       Results for search term</p>
         <p>/game_info/"HLTB_GAME_ID"  =>       Spacific game full info</p>
         '''
 
@@ -46,31 +46,35 @@ def front_page():
 
     return response
 
-@app.route("/search/<game_name>")
-def search(game_name):
+@app.route("/find-game/<game_name>")
+def find_by_name(game_name):
+
     response = {
         "HLTB" : []
     }
-    games_found = []
+    
     try:
         hltb_results = HowLongToBeat(0.1).search(game_name, similarity_case_sensitive=False)
         for i in hltb_results:
             game = {
                 "game_id":i.game_id,
                 "game_name":i.game_name,
-                "game_image_url": "https://howlongtobeat.com" + i.game_image_url,
+                "game_alias":i.game_alias,
+                "game_type":i.game_type,
+                "game_image_url":i.game_image_url,
                 "game_web_link":i.game_web_link,
-                "gameplay_main" : i.gameplay_main,
-                "gameplay_main_unit" : i.gameplay_main_unit,
-                "gameplay_main_label" : i.gameplay_main_label,
-                "gameplay_main_extra" : i.gameplay_main_extra,
-                "gameplay_main_extra_unit" : i.gameplay_main_extra_unit,
-                "gameplay_main_extra_label" : i.gameplay_main_extra_label,
-                "gameplay_completionist" : i.gameplay_completionist,
-                "gameplay_completionist_unit" : i.gameplay_completionist_unit,
-                "gameplay_completionist_label" : i .gameplay_completionist_label
+                "game_review_score":i.review_score,
+                "game_developer":i.profile_dev,
+                "game_platforms":i.profile_platforms,
+                "game_release":i.release_world,
+                "game_main":i.main_story,
+                "game_extra":i.main_extra,
+                "game_completionist":i.completionist,
+                "game_all_styles":i.all_styles
             }
+
             response["HLTB"].append(game)
+            
     except Exception as ex:
         print(ex)
     return response
