@@ -7,7 +7,7 @@ app = Flask(__name__)
 @app.route('/')
 def hello_world():
     return '''<p>How Long To Beat - API (beta - by JohnnyBannanis)</p>
-        <p>/search                    =>       Default Search (first page games on HLTB)</p>
+        <p>/front-page                =>       Default Search (first page of games on HLTB)</p>
         <p>/search/"GAME_NAME"        =>       Results for search term</p>
         <p>/game_info/"HLTB_GAME_ID"  =>       Spacific game full info</p>
         '''
@@ -43,6 +43,7 @@ def front_page():
             
     except Exception as ex:
         print(ex)
+
     return response
 
 @app.route("/search/<game_name>")
