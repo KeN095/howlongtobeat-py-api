@@ -9,7 +9,7 @@ def hello_world():
     return '''<p>How Long To Beat - API (beta - by JohnnyBannanis)</p>
         <p>/front-page                =>       Default Search (first page of games on HLTB)</p>
         <p>/find-game/"GAME_NAME"     =>       Results for search term</p>
-        <p>/game_info/"HLTB_GAME_ID"  =>       Spacific game full info</p>
+        <p>/game_info/"HLTB_GAME_ID"  =>       Results for a single game based on a valid HLTB ID</p>
         '''
 
 @app.route("/front-page")
@@ -80,35 +80,33 @@ def find_game(game_name):
     return response
 
 @app.route("/game_info/<id>")
-def Game(id):
-    game_url = "https://howlongtobeat.com/game.php?id=" + str(id)
-    response = {
-    }
+def find_by_id(id):
+
     try:
-        i = HowLongToBeat().search_from_id(id)
-        extra_info = info_scraping.scraping(game_url)
-        game = {
-            "game_id":i.game_id,
-            "game_name":i.game_name,
-            "game_image_url": "https://howlongtobeat.com" + i.game_image_url,
-            "game_web_link":i.game_web_link,
-            "description": extra_info["description"],
-            "rating": extra_info["rating"],
-            "more_info": extra_info["game_info"],
-            "gameplay_main" : i.gameplay_main,
-            "gameplay_main_unit" : i.gameplay_main_unit,
-            "gameplay_main_label" : i.gameplay_main_label,
-            "gameplay_main_extra" : i.gameplay_main_extra,
-            "gameplay_main_extra_unit" : i.gameplay_main_extra_unit,
-            "gameplay_main_extra_label" : i.gameplay_main_extra_label,
-            "gameplay_completionist" : i.gameplay_completionist,
-            "gameplay_completionist_unit" : i.gameplay_completionist_unit,
-            "gameplay_completionist_label" : i .gameplay_completionist_label
-        }
-        response = game
+         gameData = HowLongToBeat().search_from_id(id)
+         #extraInfo = info_scraping(gameData.game_web_link)
+
+         game = {
+                "game_id":gameData.game_id,
+                "game_name":gameData.game_name,
+                "game_alias":gameData.game_alias,
+                "game_type":gameData.game_type,
+                "game_image_url":gameData.game_image_url,
+                "game_web_link":gameData.game_web_link,
+                "game_review_score":gameData.review_score,
+                "game_developer":gameData.profile_dev,
+                "game_platforms":gameData.profile_platforms,
+                "game_release":gameData.release_world,
+                "game_main":gameData.main_story,
+                "game_extra":gameData.main_extra,
+                "game_completionist":gameData.completionist,
+                "game_all_styles":gameData.all_styles 
+    }
     except Exception as ex:
         print(ex)
-    return response
+
+    return game
+        
 
 if __name__ == '__main__':
     #set host and port
