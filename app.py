@@ -21,6 +21,7 @@ def front_page():
 
     try:
         hltb_results = HowLongToBeat(0.1).search(" ", similarity_case_sensitive=False)
+
         for i in hltb_results:
             game = {
                 "game_id":i.game_id,
@@ -43,8 +44,9 @@ def front_page():
             
     except Exception as ex:
         print(ex)
+        return 500
 
-    return response
+    return response, 200
 
 @app.route("/find-game/<game_name>")
 def find_game(game_name):
@@ -55,6 +57,10 @@ def find_game(game_name):
     
     try:
         hltb_results = HowLongToBeat(0.1).search(game_name, similarity_case_sensitive=False)
+        
+        if not hltb_results:
+            return [], 404
+        
         for i in hltb_results:
             game = {
                 "game_id":i.game_id,
@@ -77,14 +83,24 @@ def find_game(game_name):
             
     except Exception as ex:
         print(ex)
-    return response
+        return 500
+
+    if response:
+        return response, 200
 
 @app.route("/game_info/<id>")
 def find_by_id(id):
 
+    if not id.isnumeric():
+        return [],404
+
     try:
+        
          gameData = HowLongToBeat().search_from_id(id)
          #extraInfo = info_scraping(gameData.game_web_link)
+
+         if not gameData:
+             return [], 404
 
          game = {
                 "game_id":gameData.game_id,
@@ -101,11 +117,13 @@ def find_by_id(id):
                 "game_extra":gameData.main_extra,
                 "game_completionist":gameData.completionist,
                 "game_all_styles":gameData.all_styles 
-    }
+            }
+         
     except Exception as ex:
         print(ex)
+        return 500
 
-    return game
+    return game, 200
         
 
 if __name__ == '__main__':
