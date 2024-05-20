@@ -9,7 +9,7 @@ def hello_world():
     return '''<p>How Long To Beat - API (beta - by JohnnyBannanis)</p>
         <p>/front-page                =>       Default Search (first page of games on HLTB)</p>
         <p>/find-game/"GAME_NAME"     =>       Results for search term</p>
-        <p>/game_info/"HLTB_GAME_ID"  =>       Results for a single game based on a valid HLTB ID</p>
+        <p>/game-info/"HLTB_GAME_ID"  =>       Results for a single game based on a valid HLTB ID</p>
         '''
 
 @app.route("/front-page")
@@ -88,31 +88,38 @@ def find_game(game_name):
     if response:
         return response, 200
 
-@app.route("/game_info/<id>")
-def find_by_id(id):
+@app.route("/game-info/<id>")
+def game_info(id):
 
-    if not id.isnumeric():
-        return [],404
+    try:
+        idInt = int(id)
+    except Exception as ex:
+        return "<h1>400 Invalid data</h1>", 400
 
     try:
         
-         gameData = HowLongToBeat().search_from_id(id)
-         #extraInfo = info_scraping(gameData.game_web_link)
+         gameData = HowLongToBeat().search_from_id(idInt)
 
          if not gameData:
-             return [], 404
+             return "<h1>404 Data not found</h1>", 404
+         
+         extra_info = info_scraping.scrape_info(gameData.game_web_link)
 
          game = {
                 "game_id":gameData.game_id,
                 "game_name":gameData.game_name,
                 "game_alias":gameData.game_alias,
                 "game_type":gameData.game_type,
+                "game_description":extra_info["game_description"],
                 "game_image_url":gameData.game_image_url,
                 "game_web_link":gameData.game_web_link,
                 "game_review_score":gameData.review_score,
                 "game_developer":gameData.profile_dev,
+                "game_publisher":extra_info["publisher"],
                 "game_platforms":gameData.profile_platforms,
-                "game_release":gameData.release_world,
+                "game_release":extra_info["release_dates"],
+                "game_last_updated":extra_info["last_updated"],
+                "game_genres":extra_info["genres"],
                 "game_main":gameData.main_story,
                 "game_extra":gameData.main_extra,
                 "game_completionist":gameData.completionist,
@@ -121,7 +128,7 @@ def find_by_id(id):
          
     except Exception as ex:
         print(ex)
-        return 500
+        return "<h1>500 Internal Server Error</h1>",500
 
     return game, 200
         
