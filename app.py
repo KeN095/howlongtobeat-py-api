@@ -44,7 +44,7 @@ def front_page():
             
     except Exception as ex:
         print(ex)
-        return 500
+        return "<h1>500 Internal Server Error</h1>",500
 
     return response, 200
 
@@ -59,7 +59,7 @@ def find_game(game_name):
         hltb_results = HowLongToBeat(0.1).search(game_name, similarity_case_sensitive=False)
         
         if not hltb_results:
-            return [], 404
+            return  "<h1>404 Data not found</h1>", 404
         
         for i in hltb_results:
             game = {
@@ -83,7 +83,7 @@ def find_game(game_name):
             
     except Exception as ex:
         print(ex)
-        return 500
+        return "<h1>500 Internal Server Error</h1>",500
 
     if response:
         return response, 200
