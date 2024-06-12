@@ -74,6 +74,3 @@ def scrape_info(url):
     except Exception as ex:
          print(ex)
          return {}
-
-
-print(scrape_info("https://howlongtobeat.com/game/6085"))
