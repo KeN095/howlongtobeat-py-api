@@ -18,12 +18,22 @@ def scrape_info(url):
 
         release_dates={}
         description = publisher = genres = last_updated = None
+        readMore = "...Read More"
 
-        # Get description
-        if soup.find('div', class_= "GameSummary_profile_info__HZFQu GameSummary_large__TIGhL").text.replace("...Read More",""):
-            description = soup.find('div', class_= "GameSummary_profile_info__HZFQu GameSummary_large__TIGhL").text.replace("...Read More","").strip()
-
-        #TODO: fix possible extra space between the first half of description and second half
+        # Get description by determining if the string "...Read More" is present
+        if soup.find('div', class_= "GameSummary_profile_info__HZFQu GameSummary_large__TIGhL").text.find(readMore) >= 1:
+            #Get the index of when that string first appears
+            desc = soup.find('div', class_= "GameSummary_profile_info__HZFQu GameSummary_large__TIGhL").text
+            readMorePosition = soup.find('div', class_= "GameSummary_profile_info__HZFQu GameSummary_large__TIGhL").text.find(readMore)
+            #Take the substring from index 0 all the way up to the first occurence of "...Read More"
+            beforeReadMore = desc[:readMorePosition].strip()
+            #Combine the index at readMorePosition with the length of the readMore string to retrieve the starting index and obtain the rest of the string after "...Read More" 
+            afterReadMore = desc[readMorePosition + len(readMore):].strip()
+            #Concatenate/Combine the strings
+            description = beforeReadMore + afterReadMore
+        elif soup.find('div', class_= "GameSummary_profile_info__HZFQu GameSummary_large__TIGhL").text:
+             #if "...Read more" is not present, just extract the description text
+             description = soup.find('div', class_= "GameSummary_profile_info__HZFQu GameSummary_large__TIGhL").text
         
         #Get publisher and genres
         if soup.find_all('div', class_="GameSummary_profile_info__HZFQu GameSummary_medium___r_ia"):
@@ -65,3 +75,5 @@ def scrape_info(url):
          print(ex)
          return {}
 
+
+print(scrape_info("https://howlongtobeat.com/game/6085"))
